@@ -604,9 +604,9 @@ int main(int argc, char **argv)
             {
                 if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_X86_64)
                 {
-                    printf("Patching X86_64 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                    printf("Patching X86_64 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
                     
-                    archbuffer = buffer + SWAPOFFSET64(archbin->offset);
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
 
 #if defined(__ppc__) || defined(__ppc64__)
@@ -626,7 +626,7 @@ int main(int argc, char **argv)
                     remove_code_signature_32(archbuffer, false);
 #endif
                 } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM64) {
-                    printf("Patching ARM64 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                    printf("Patching ARM64 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
@@ -637,7 +637,7 @@ int main(int argc, char **argv)
                     remove_code_signature_64(archbuffer, false);
 #endif
                 } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM) {
-                    printf("Patching ARM32 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                    printf("Patching ARM32 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
@@ -687,9 +687,9 @@ int main(int argc, char **argv)
             {
                 if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_X86_64)
                 {
-                    printf("Patching X86_64 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                    printf("Patching X86_64 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
                     
-                    archbuffer = buffer + XSWAPOFFSET64(archbin->offset);
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
 
 #if defined(__ppc__) || defined(__ppc64__)
@@ -709,7 +709,7 @@ int main(int argc, char **argv)
                     remove_code_signature_32(archbuffer, false);
 #endif
                 } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM64) {
-                    printf("Patching ARM64 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                    printf("Patching ARM64 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
@@ -720,7 +720,7 @@ int main(int argc, char **argv)
                     remove_code_signature_64(archbuffer, false);
 #endif
                 } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM) {
-                    printf("Patching ARM32 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                    printf("Patching ARM32 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
