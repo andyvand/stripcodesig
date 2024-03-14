@@ -1,7 +1,7 @@
 CC=clang
 CODESIGN=codesign -f -s "Apple Development"
 #CODESIGN=codesign -f -s "-"
-CFLAGS=-arch arm64 -arch x86_64 -O3
+CFLAGS=-arch arm64 -arch x86_64 -mmacosx-version-min=10.6 -O3
 
 all: stripcodesig
 
