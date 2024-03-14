@@ -255,10 +255,10 @@ kern_return_t remove_code_signature_64(uint8_t *data, bool swapped)
     {
         if (swapped == true)
         {
-            cryptsigdata = (uint8_t *)(data + cryptsiglc->dataoff);
+            cryptsigdata = (uint8_t *)(data + OSSwapInt32(cryptsiglc->dataoff));
             
             /* Zero code signature... */
-            while (zeroeddata < cryptsiglc->datasize)
+            while (zeroeddata < OSSwapInt32(cryptsiglc->datasize))
             {
                 *cryptsigdata = 0;
                 ++zeroeddata;
