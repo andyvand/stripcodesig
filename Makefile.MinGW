@@ -1,0 +1,21 @@
+CC=gcc
+WINDRES=windres
+CFLAGS=-O3
+
+all: stripcodesig.exe
+
+stripcodesig.exe: stripcodesig.o stripcodesigres.o
+	$(CC) -o $@ stripcodesig.o stripcodesigres.o
+
+stripcodesig.o: stripcodesig.c
+	$(CC) $(CFLAGS) -I. -o $@ -c $<
+
+stripcodesigres.o: stripcodesig.rc
+	$(WINDRES) -o $@ $<
+
+clean:
+	rm -f stripcodesig.exe stripcodesig.o stripcodesigres.o>
+
+install: stripcodesig.exe
+	cp -f stripcodesig.exe /C/msys64/usr/bin
+

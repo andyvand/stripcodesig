@@ -384,7 +384,7 @@ int main(int argc, char **argv)
 	}
 
 #if (defined(_MSC_VER) || defined(__clang__)) && __STDC_WANT_SECURE_LIB__
-	fopen_s(&f, argvW[1], "rb");
+	fopen_s(&f, argv[1], "rb");
 #else
 	f = fopen(argv[1], "rb");
 #endif
