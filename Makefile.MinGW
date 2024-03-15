@@ -14,7 +14,7 @@ stripcodesigres.o: stripcodesig.rc
 	$(WINDRES) -o $@ $<
 
 clean:
-	rm -f stripcodesig.exe stripcodesig.o stripcodesigres.o>
+	rm -f stripcodesig.exe stripcodesig.o stripcodesigres.o
 
 install: stripcodesig.exe
 	cp -f stripcodesig.exe /C/msys64/usr/bin
