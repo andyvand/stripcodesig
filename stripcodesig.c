@@ -383,7 +383,11 @@ int main(int argc, char **argv)
 		return(1);
 	}
 
+#if defined(_MSC_VER) && __STDC_WANT_SECURE_LIB__
+	fopen_s(&f, argvW[1], "rb");
+#else
 	f = fopen(argv[1], "rb");
+#endif
 
 	if (!f)
 	{
@@ -771,21 +775,25 @@ int main(int argc, char **argv)
 	{
 		printf("No codesignatures found, not generating output file\n");
 	} else {
+#if defined(_MSC_VER) && __STDC_WANT_SECURE_LIB__
+		fopen_s(&f, argv[2], "wb");
+#else
 		f = fopen(argv[2], "wb");
+#endif
 
-        if (!f)
-        {
-                printf("ERROR: Opening output file failed\n");
+	        if (!f)
+        	{
+                	printf("ERROR: Opening output file failed\n");
 
-                return(-3);
-        }
+                	return(-3);
+        	}
 
 		fwrite((char *)buffer,filesize,1,f);
 
 		fclose(f);
 	}
 
-    printf("Removed %d code signatures\n", total_patches);
+    	printf("Removed %d code signatures\n", total_patches);
 
 	return(0);
 }
