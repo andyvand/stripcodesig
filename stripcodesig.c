@@ -34,6 +34,18 @@
 #define bool unsigned char
 #endif
 
+#ifndef kern_return_t
+#define kern_return_t int
+#endif
+
+#ifndef KERN_SUCCESS
+#define KERN_SUCCESS 0
+#endif
+
+#ifndef KERN_FAILURE
+#define KERN_FAILURE -1
+#endif
+
 /* note: the map_addr and map_size arguments are used only for error checking. */
 
 kern_return_t remove_code_signature_32(uint8_t *data, bool swapped)

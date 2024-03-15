@@ -36,24 +36,25 @@
 #include <mach/machine.h>
 #endif
 
-/*
- * <mach/vm_prot.h> is needed here for the vm_prot_t type and contains the 
- * constants that are or'ed together for the possible values of this type.
- */
-#if __has_include(<mach/vm_prot.h>)
-#include <mach/vm_prot.h>
-#endif
+#ifndef OSSwapInt32
+#define OSSwapInt32(x) \
+    ((uint32_t)((((uint32_t)(x) & 0xff000000) >> 24) | \
+                (((uint32_t)(x) & 0x00ff0000) >>  8) | \
+                (((uint32_t)(x) & 0x0000ff00) <<  8) | \
+                (((uint32_t)(x) & 0x000000ff) << 24)))
+#endif /* OSSwapInt32 */
 
-/*
- * <machine/thread_status.h> is expected to define the flavors of the thread
- * states and the structures of those flavors for each machine.
- */
-#if __has_include(<mach/machine/thread_status.h>)
-#include <mach/machine/thread_status.h>
-#endif
-#if __has_include(<architecture/byte_order.h>)
-#include <architecture/byte_order.h>
-#endif
+#ifndef OSSwapInt64
+#define OSSwapInt64(x) \
+    ((uint64_t)((((uint64_t)(x) & 0xff00000000000000ULL) >> 56) | \
+                (((uint64_t)(x) & 0x00ff000000000000ULL) >> 40) | \
+                (((uint64_t)(x) & 0x0000ff0000000000ULL) >> 24) | \
+                (((uint64_t)(x) & 0x000000ff00000000ULL) >>  8) | \
+                (((uint64_t)(x) & 0x00000000ff000000ULL) <<  8) | \
+                (((uint64_t)(x) & 0x0000000000ff0000ULL) << 24) | \
+                (((uint64_t)(x) & 0x000000000000ff00ULL) << 40) | \
+                (((uint64_t)(x) & 0x00000000000000ffULL) << 56)))
+#endif /* OSSwapInt64 */
 
 /*
  * The 32-bit mach header appears at the very beginning of the object file for
