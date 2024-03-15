@@ -10,16 +10,6 @@
  * AnV - Added better opcode + SSE4.1 + SSE4.2 support
  */
 
-#define VERBOSE FALSE
-//#define VERBOSE TRUE
-
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <mach-o/fat.h>
-#include <mach-o/loader.h>
-
 #include "stripcodesig.h"
 
 #ifndef true
@@ -65,7 +55,7 @@ kern_return_t remove_code_signature_32(uint8_t *data, bool swapped)
     struct linkedit_data_command *cryptsigdrs = (struct linkedit_data_command *)0;
 	uint8_t *cryptsigdata = (uint8_t *)0;
     uint8_t *cryptdrsdata = (uint8_t *)0;
-	uint32_t cryptsigdatasize = 0;
+	//uint32_t cryptsigdatasize = 0;
 	uint32_t zeroeddata = 0;
 
 	/* Get code signature load command + divide */
@@ -218,7 +208,7 @@ kern_return_t remove_code_signature_64(uint8_t *data, bool swapped)
     struct linkedit_data_command *cryptsigdrs = (struct linkedit_data_command *)0;
 	uint8_t *cryptsigdata = (uint8_t *)0;
     uint8_t *cryptdrsdata = (uint8_t *)0;
-	uint32_t cryptsigdatasize = 0;
+	//uint32_t cryptsigdatasize = 0;
 	uint32_t zeroeddata = 0;
 	
        /* Get code signature load command + divide */
@@ -378,7 +368,7 @@ int main(int argc, char **argv)
 	FILE *f = NULL;
 	uint8_t *buffer = NULL;
 	uint8_t *archbuffer = NULL;
-	struct fat_header *univbin = NULL;
+	//struct fat_header *univbin = NULL;
 	struct fat_arch *archbin = NULL;
     struct fat_arch_64 *archbin64 = NULL;
 	int filesize = 0;
@@ -403,7 +393,7 @@ int main(int argc, char **argv)
 	}
 
 	fseek(f,0,SEEK_END);
-	filesize = ftell(f);
+	filesize = (int)ftell(f);
 	fseek(f,0,SEEK_SET);
 
 	buffer = (uint8_t *)malloc(filesize);

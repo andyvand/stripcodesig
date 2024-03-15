@@ -42,10 +42,7 @@
  * and contains the constants for the possible values of these types.
  */
 #include <stdint.h>
-
-#if __has_include(<mach/machine.h>)
 #include <mach/machine.h>
-#endif
 
 #define FAT_MAGIC	0xcafebabe
 #define FAT_CIGAM	0xbebafeca	/* NXSwapLong(FAT_MAGIC) */
