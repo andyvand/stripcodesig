@@ -383,7 +383,7 @@ int main(int argc, char **argv)
 		return(1);
 	}
 
-#if defined(_MSC_VER) && __STDC_WANT_SECURE_LIB__
+#if (defined(_MSC_VER) || defined(__clang__)) && __STDC_WANT_SECURE_LIB__
 	fopen_s(&f, argvW[1], "rb");
 #else
 	f = fopen(argv[1], "rb");
@@ -775,7 +775,7 @@ int main(int argc, char **argv)
 	{
 		printf("No codesignatures found, not generating output file\n");
 	} else {
-#if defined(_MSC_VER) && __STDC_WANT_SECURE_LIB__
+#if (defined(_MSC_VER) || defined(__clang__)) && __STDC_WANT_SECURE_LIB__
 		fopen_s(&f, argv[2], "wb");
 #else
 		f = fopen(argv[2], "wb");
