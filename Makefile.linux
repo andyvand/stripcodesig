@@ -1,0 +1,14 @@
+CC=gcc
+CFLAGS=-O3
+
+all: stripcodesig
+
+stripcodesig: stripcodesig.c
+	$(CC) $(CFLAGS) -I. -o $@ $<
+
+clean:
+	rm -f stripcodesig
+
+install: stripcodesig
+	cp -f stripcodesig /usr/bin/
+
