@@ -1,13 +1,10 @@
 CC=gcc
-CODESIGN=codesign -f -s "Apple Development"
-#CODESIGN=codesign -f -s "-"
-CFLAGS=-arch ppc -arch pp64 -arch x86_64 -arch i386 -mmacosx-version-min=10.4 -O3
+CFLAGS=-arch ppc -arch ppc64 -arch x86_64 -arch i386 -mmacosx-version-min=10.4 -O3
 
 all: stripcodesig
 
 stripcodesig: stripcodesig.c
 	$(CC) $(CFLAGS) -I. -o $@ $<
-	$(CODESIGN) $@
 
 clean:
 	rm -f stripcodesig
