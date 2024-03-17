@@ -38,7 +38,7 @@
       "indexPCHPath" : "/Users/andyvand/Library/Developer/Xcode/DerivedData/stripcodesig-hehpwhvxyllfjlgeljlziqjkirfn/Index.noindex/PrecompiledHeaders",
       "pchPath" : ""
     },
-    "configurationName" : "Release",
+    "configurationName" : "Debug",
     "overrides" : {
       "synthesized" : {
         "table" : {
