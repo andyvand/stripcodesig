@@ -344,18 +344,6 @@ kern_return_t remove_code_signature_64(uint8_t *data, bool swapped)
 	return KERN_SUCCESS;
 }
 
-#if defined(__ppc__) || defined(__ppc64__)
-#define SWAPOFFSET32(X) X
-#define SWAPOFFSET64(X) X
-#define XSWAPOFFSET32(X) OSSwapInt32(X)
-#define XSWAPOFFSET64(X) OSSwapInt64(X)
-#else
-#define SWAPOFFSET32(X) OSSwapInt32(X)
-#define SWAPOFFSET64(X) OSSwapInt64(X)
-#define XSWAPOFFSET32(X) X
-#define XSWAPOFFSET64(X) X
-#endif
-
 void Usage(char *name)
 {
 	printf("stripcodesig V1.5\n");
@@ -596,7 +584,7 @@ int main(int argc, char **argv)
 		f = fopen(argv[2], "wb");
 #endif
 
-        if (!f)
+        if (f == NULL)
         {
             printf("ERROR: Opening output file failed\n");
 
