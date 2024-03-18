@@ -1,0 +1,2 @@
+﻿  stripcodesig.c
+stripcodesig\ARM\Debug\stripcodesig.obj : fatal error LNK1112: module machine type 'ARM64' conflicts with target machine type 'ARM'
