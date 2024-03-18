@@ -211,40 +211,40 @@ kern_return_t remove_code_signature_64(uint8_t *data, bool swapped)
 	//uint32_t cryptsigdatasize = 0;
 	uint32_t zeroeddata = 0;
 	
-       /* Get code signature load command + divide */
-        while (curlc < totlc)
+    /* Get code signature load command + divide */
+    while (curlc < totlc)
+    {
+        if (swapped == true)
         {
-            if (swapped == true)
+            if (OSSwapInt32(tmplc->cmd) == LC_CODE_SIGNATURE)
             {
-                if (OSSwapInt32(tmplc->cmd) == LC_CODE_SIGNATURE)
-                {
-                    cryptsiglc = (struct linkedit_data_command *)(data + curoff);
-                }
-            
-                if (OSSwapInt32(tmplc->cmd) == LC_DYLIB_CODE_SIGN_DRS)
-                {
-                    cryptsigdrs = (struct linkedit_data_command *)(data + curoff);
-                }
-            
-                curoff += OSSwapInt32(tmplc->cmdsize);
-            } else {
-                if (tmplc->cmd == LC_CODE_SIGNATURE)
-                {
-                    cryptsiglc = (struct linkedit_data_command *)(data + curoff);
-                }
-            
-                if (tmplc->cmd == LC_DYLIB_CODE_SIGN_DRS)
-                {
-                    cryptsigdrs = (struct linkedit_data_command *)(data + curoff);
-                }
-            
-            
-                curoff += tmplc->cmdsize;
+                cryptsiglc = (struct linkedit_data_command *)(data + curoff);
             }
-
-            tmplc = (struct load_command *)(data + curoff);
-            ++curlc;
+            
+            if (OSSwapInt32(tmplc->cmd) == LC_DYLIB_CODE_SIGN_DRS)
+            {
+                cryptsigdrs = (struct linkedit_data_command *)(data + curoff);
+            }
+            
+            curoff += OSSwapInt32(tmplc->cmdsize);
+        } else {
+            if (tmplc->cmd == LC_CODE_SIGNATURE)
+            {
+                cryptsiglc = (struct linkedit_data_command *)(data + curoff);
+            }
+            
+            if (tmplc->cmd == LC_DYLIB_CODE_SIGN_DRS)
+            {
+                cryptsigdrs = (struct linkedit_data_command *)(data + curoff);
+            }
+            
+            
+            curoff += tmplc->cmdsize;
         }
+
+        tmplc = (struct load_command *)(data + curoff);
+        ++curlc;
+    }
 
 	/* Safety check */
 	if ((cryptsiglc == 0) && (cryptsigdrs == 0))
