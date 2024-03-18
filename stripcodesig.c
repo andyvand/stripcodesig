@@ -554,7 +554,7 @@ int main(int argc, char **argv)
 
         while (current_bin != total_bins)
         {
-            printf("Patching for processor 0x%X, binary %d\n", archbin64->cputype, current_bin);
+            printf("Patching for processor 0x%X, binary %d\n", OSSwapInt32(archbin64->cputype), current_bin);
 
             archbuffer = buffer + OSSwapInt64(archbin64->offset);
             total_patches += 1;
