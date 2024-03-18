@@ -358,7 +358,7 @@ kern_return_t remove_code_signature_64(uint8_t *data, bool swapped)
 
 void Usage(char *name)
 {
-	printf("stripcodesig V1.3\n");
+	printf("stripcodesig V1.4\n");
 	printf("Usage: %s <infile> <outfile>\n", name);
 	printf("Copyright (C) 2010-2024 AnV Software\n");
 }
@@ -371,6 +371,7 @@ int main(int argc, char **argv)
 	//struct fat_header *univbin = NULL;
 	struct fat_arch *archbin = NULL;
     struct fat_arch_64 *archbin64 = NULL;
+    struct mach_header *mh = NULL;
 	int filesize = 0;
 	uint32_t current_bin = 0;
 	uint32_t total_bins = 0;
@@ -450,77 +451,326 @@ int main(int argc, char **argv)
                 
                 archbuffer = buffer + SWAPOFFSET32(archbin->offset);
                 total_patches += 1;
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_64(archbuffer, true);
-#else
-                remove_code_signature_64(archbuffer, false);
-#endif
+
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_I386) {
                 printf("Patching I386 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + SWAPOFFSET32(archbin->offset);
                 total_patches += 1;
                 
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_32(archbuffer, true);
-#else
-                remove_code_signature_32(archbuffer, false);
-#endif
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_ARM64) {
                 printf("Patching ARM64 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + SWAPOFFSET32(archbin->offset);
                 total_patches += 1;
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_64(archbuffer, true);
-#else
-                remove_code_signature_64(archbuffer, false);
-#endif
+                
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_ARM64_32) {
                 printf("Patching ARM64_32 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + SWAPOFFSET32(archbin->offset);
                 total_patches += 1;
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_32(archbuffer, true);
-#else
-                remove_code_signature_32(archbuffer, false);
-#endif
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_ARM) {
                 printf("Patching ARM32 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + SWAPOFFSET32(archbin->offset);
                 total_patches += 1;
-                
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_32(archbuffer, true);
-#else
-                remove_code_signature_32(archbuffer, false);
-#endif
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_POWERPC64) {
                 printf("Patching PowerPC64 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + SWAPOFFSET32(archbin->offset);
                 total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_64(archbuffer, false);
-#else
-                remove_code_signature_64(archbuffer, true);
-#endif
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_POWERPC) {
                 printf("Patching PowerPC32 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + SWAPOFFSET32(archbin->offset);
                 total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_MC680x0) {
+                printf("Patching MC680X0 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
                 
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_32(archbuffer, false);
-#else
-                remove_code_signature_32(archbuffer, true);
-#endif
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+                
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_VAX) {
+                printf("Patching VAX part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_MC98000) {
+                printf("Patching MC98000 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_HPPA) {
+                printf("Patching HPPA part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_MC88000) {
+                printf("Patching MC88000 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_SPARC) {
+                printf("Patching MC88000 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_MIPS) {
+                printf("Patching MIPS part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_I860) {
+                printf("Patching I860 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_ALPHA) {
+                printf("Patching ALPHA part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_ANY) {
+                printf("Patching ANY part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + SWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else {
-                printf("Skipping non-Intel/ARM/PPC architecture (%d)\n", current_bin);
+                printf("Skipping unknown architecture (%d)\n", current_bin);
             }
             
             ++current_bin;
@@ -542,76 +792,323 @@ int main(int argc, char **argv)
                 archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
                 total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_64(archbuffer, true);
-#else
-                remove_code_signature_64(archbuffer, false);
-#endif
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_I386) {
                 printf("Patching I386 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
                 total_patches += 1;
                 
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_32(archbuffer, true);
-#else
-                remove_code_signature_32(archbuffer, false);
-#endif
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_ARM64) {
                 printf("Patching ARM64 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
                 total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_64(archbuffer, true);
-#else
-                remove_code_signature_64(archbuffer, false);
-#endif
-            } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_ARM64_32) {
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_ARM64_32) {
                 printf("Patching ARM64_32 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
                 total_patches += 1;
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_32(archbuffer, true);
-#else
-                remove_code_signature_32(archbuffer, false);
-#endif
+
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_ARM) {
                 printf("Patching ARM32 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
                 total_patches += 1;
                 
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_32(archbuffer, true);
-#else
-                remove_code_signature_32(archbuffer, false);
-#endif
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_POWERPC64) {
                 printf("Patching PowerPC64 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
                 total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_64(archbuffer, false);
-#else
-                remove_code_signature_64(archbuffer, true);
-#endif
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_POWERPC) {
                 printf("Patching PowerPC32 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
                 
                 archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
                 total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
                 
-#if defined(__ppc__) || defined(__ppc64__)
-                remove_code_signature_32(archbuffer, false);
-#else
-                remove_code_signature_32(archbuffer, true);
-#endif
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_MC680x0) {
+                printf("Patching MC680X0 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+                
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_VAX) {
+                printf("Patching VAX part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_MC98000) {
+                printf("Patching MC98000 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_HPPA) {
+                printf("Patching HPPA part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_MC88000) {
+                printf("Patching MC88000 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_SPARC) {
+                printf("Patching MC88000 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_MIPS) {
+                printf("Patching MIPS part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_I860) {
+                printf("Patching I860 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_ALPHA) {
+                printf("Patching ALPHA part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
+            } else if (XSWAPOFFSET32(archbin->cputype) == CPU_TYPE_ANY) {
+                printf("Patching ANY part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin->cputype), current_bin);
+                
+                archbuffer = buffer + XSWAPOFFSET32(archbin->offset);
+                total_patches += 1;
+
+                mh = (struct mach_header *)archbuffer;
+                
+                if (mh->magic == MH_CIGAM)
+                {
+                    remove_code_signature_32(archbuffer, true);
+                } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                } else if (mh->magic == MH_MAGIC) {
+                    remove_code_signature_32(archbuffer, false);
+                } else if (mh->magic == MH_MAGIC_64) {
+                    remove_code_signature_64(archbuffer, false);
+                } else {
+                    printf("Skipping file with wrong magic: %u\n", mh->magic);
+                }
             } else {
                 printf("Skipping non-Intel/ARM/PowerPC architecture (%d)\n", current_bin);
             }
@@ -635,78 +1132,332 @@ int main(int argc, char **argv)
                     archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_64(archbuffer, true);
-#else
-                    remove_code_signature_64(archbuffer, false);
-#endif
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_I386) {
                     printf("Patching I386 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
                     
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_32(archbuffer, true);
-#else
-                    remove_code_signature_32(archbuffer, false);
-#endif
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM64) {
                     printf("Patching ARM64 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_64(archbuffer, true);
-#else
-                    remove_code_signature_64(archbuffer, false);
-#endif
-                } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_ARM64_32) {
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM64_32) {
                     printf("Patching ARM64_32 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + SWAPOFFSET32(archbin64->offset);
                     total_patches += 1;
-    #if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_32(archbuffer, true);
-    #else
-                    remove_code_signature_32(archbuffer, false);
-    #endif
+
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM) {
                     printf("Patching ARM32 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
                     
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_32(archbuffer, true);
-#else
-                    remove_code_signature_32(archbuffer, false);
-#endif
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_POWERPC64) {
                     printf("Patching PowerPC64 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_64(archbuffer, false);
-#else
-                    remove_code_signature_64(archbuffer, true);
-#endif
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_POWERPC) {
                     printf("Patching PowerPC32 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
                     
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_32(archbuffer, false);
-#else
-                    remove_code_signature_32(archbuffer, true);
-#endif
-                } else {
-                    printf("Skipping non-Intel/ARM/PPC architecture (%d)\n", current_bin);
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                        
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_MC680x0) {
+                    printf("Patching MC680X0 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+                    
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_VAX) {
+                    printf("Patching VAX part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_MC98000) {
+                    printf("Patching MC98000 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_HPPA) {
+                    printf("Patching HPPA part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_MC88000) {
+                    printf("Patching MC88000 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_SPARC) {
+                    printf("Patching SPARC part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_MIPS) {
+                    printf("Patching MIPS part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_I860) {
+                    printf("Patching I860 part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ALPHA) {
+                    printf("Patching ALPHA part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (SWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ANY) {
+                    printf("Patching ANY part (processor %u, architecture %d)\n", SWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + SWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }                } else {
+                    printf("Skipping unknown architecture (%d)\n", current_bin);
                 }
                 
                 ++current_bin;
@@ -728,78 +1479,335 @@ int main(int argc, char **argv)
                     archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_64(archbuffer, true);
-#else
-                    remove_code_signature_64(archbuffer, false);
-#endif
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_I386) {
                     printf("Patching I386 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
                     
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_32(archbuffer, true);
-#else
-                    remove_code_signature_32(archbuffer, false);
-#endif
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM64) {
                     printf("Patching ARM64 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_64(archbuffer, true);
-#else
-                    remove_code_signature_64(archbuffer, false);
-#endif
-                } else if (SWAPOFFSET32(archbin->cputype) == CPU_TYPE_ARM64_32) {
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM64_32) {
                     printf("Patching ARM64_32 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + XSWAPOFFSET32(archbin64->offset);
                     total_patches += 1;
-    #if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_32(archbuffer, true);
-    #else
-                    remove_code_signature_32(archbuffer, false);
-    #endif
+
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ARM) {
                     printf("Patching ARM32 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
                     
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_32(archbuffer, true);
-#else
-                    remove_code_signature_32(archbuffer, false);
-#endif
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_POWERPC64) {
                     printf("Patching PowerPC64 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_64(archbuffer, false);
-#else
-                    remove_code_signature_64(archbuffer, true);
-#endif
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_POWERPC) {
                     printf("Patching PowerPC32 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
                     
                     archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
                     total_patches += 1;
 
-#if defined(__ppc__) || defined(__ppc64__)
-                    remove_code_signature_32(archbuffer, false);
-#else
-                    remove_code_signature_32(archbuffer, true);
-#endif
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_MC680x0) {
+                    printf("Patching MC680X0 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+                    
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_VAX) {
+                    printf("Patching VAX part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_MC98000) {
+                    printf("Patching MC98000 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_HPPA) {
+                    printf("Patching HPPA part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_MC88000) {
+                    printf("Patching MC88000 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_SPARC) {
+                    printf("Patching SPARC part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_MIPS) {
+                    printf("Patching MIPS part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_I860) {
+                    printf("Patching I860 part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ALPHA) {
+                    printf("Patching ALPHA part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {                    remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
+                } else if (XSWAPOFFSET32(archbin64->cputype) == CPU_TYPE_ANY) {
+                    printf("Patching ANY part (processor %u, architecture %d)\n", XSWAPOFFSET32(archbin64->cputype), current_bin);
+                    
+                    archbuffer = buffer + XSWAPOFFSET64(archbin64->offset);
+                    total_patches += 1;
+
+                    mh = (struct mach_header *)archbuffer;
+
+                    mh = (struct mach_header *)archbuffer;
+                    
+                    if (mh->magic == MH_CIGAM)
+                    {
+                        remove_code_signature_32(archbuffer, true);
+                    } else if (mh->magic == MH_CIGAM_64) {
+                        remove_code_signature_64(archbuffer, true);
+                    } else if (mh->magic == MH_MAGIC) {
+                        remove_code_signature_32(archbuffer, false);
+                    } else if (mh->magic == MH_MAGIC_64) {
+                        remove_code_signature_64(archbuffer, false);
+                    } else {
+                        printf("Skipping file with wrong magic: %u\n", mh->magic);
+                    }
                 } else {
-                    printf("Skipping non-Intel/ARM/PPC architecture (%d)\n", current_bin);
+                    printf("Skipping unknown architecture (%d)\n", current_bin);
                 }
                 
                 ++current_bin;

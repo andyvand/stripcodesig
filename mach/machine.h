@@ -102,7 +102,7 @@ typedef integer_t       cpu_threadtype_t;
 #define CPU_TYPE_I386           CPU_TYPE_X86            /* compatibility */
 #define CPU_TYPE_X86_64         (CPU_TYPE_X86 | CPU_ARCH_ABI64)
 
-/* skip CPU_TYPE_MIPS		((cpu_type_t) 8)	*/
+#define CPU_TYPE_MIPS   		((cpu_type_t) 8)
 /* skip                         ((cpu_type_t) 9)	*/
 #define CPU_TYPE_MC98000        ((cpu_type_t) 10)
 #define CPU_TYPE_HPPA           ((cpu_type_t) 11)
@@ -112,7 +112,7 @@ typedef integer_t       cpu_threadtype_t;
 #define CPU_TYPE_MC88000        ((cpu_type_t) 13)
 #define CPU_TYPE_SPARC          ((cpu_type_t) 14)
 #define CPU_TYPE_I860           ((cpu_type_t) 15)
-/* skip	CPU_TYPE_ALPHA		((cpu_type_t) 16)	*/
+#define	CPU_TYPE_ALPHA  		((cpu_type_t) 16)
 /* skip				((cpu_type_t) 17)	*/
 #define CPU_TYPE_POWERPC                ((cpu_type_t) 18)
 #define CPU_TYPE_POWERPC64              (CPU_TYPE_POWERPC | CPU_ARCH_ABI64)
