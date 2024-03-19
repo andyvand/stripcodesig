@@ -409,7 +409,7 @@ int main(int argc, char **argv)
         mh = (struct mach_header *)buffer;
 
         remove_code_signature_32(buffer, true);
-        printf("Patching for processor 0x%X\n", mh->cputype);
+        printf("Patching for processor 0x%X\n", OSSwapInt32(mh->cputype));
 
         printf ("Stripping codes signature from swapped Mach-O 32 bit binary\n");
     } else if (fh->magic == MH_MAGIC_64) {
@@ -425,7 +425,7 @@ int main(int argc, char **argv)
         mh = (struct mach_header *)buffer;
 
         remove_code_signature_64(buffer, true);
-        printf("Patching for processor 0x%X\n", mh->cputype);
+        printf("Patching for processor 0x%X\n", OSSwapInt32(mh->cputype));
 
         printf ("Stripping codes signature from swapped Mach-O 64 bit binary\n");
     } else if (fh->magic == FAT_MAGIC) {
