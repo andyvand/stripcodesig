@@ -2,9 +2,9 @@
 triple:          'arm64-apple-darwin'
 binary-path:     '/Users/andyvand/Downloads/stripcodesig/build/Release/stripcodesig'
 relocations:
-  - { offsetInCU: 0x26, offset: 0x274AC, size: 0x8, addend: 0x0, symName: _remove_code_signature_32, symObjAddr: 0x0, symBinAddr: 0x100002DB8, symSize: 0x1F4 }
-  - { offsetInCU: 0x298, offset: 0x2771E, size: 0x8, addend: 0x0, symName: _remove_code_signature_32, symObjAddr: 0x0, symBinAddr: 0x100002DB8, symSize: 0x1F4 }
-  - { offsetInCU: 0x3AF, offset: 0x27835, size: 0x8, addend: 0x0, symName: _remove_code_signature_64, symObjAddr: 0x1F4, symBinAddr: 0x100002FAC, symSize: 0x230 }
-  - { offsetInCU: 0x506, offset: 0x2798C, size: 0x8, addend: 0x0, symName: _Usage, symObjAddr: 0x424, symBinAddr: 0x1000031DC, symSize: 0x48 }
-  - { offsetInCU: 0x52F, offset: 0x279B5, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x46C, symBinAddr: 0x100003224, symSize: 0x7AC }
+  - { offsetInCU: 0x26, offset: 0x274AC, size: 0x8, addend: 0x0, symName: _remove_code_signature_32, symObjAddr: 0x0, symBinAddr: 0x100002DB4, symSize: 0x1F4 }
+  - { offsetInCU: 0x298, offset: 0x2771E, size: 0x8, addend: 0x0, symName: _remove_code_signature_32, symObjAddr: 0x0, symBinAddr: 0x100002DB4, symSize: 0x1F4 }
+  - { offsetInCU: 0x3AF, offset: 0x27835, size: 0x8, addend: 0x0, symName: _remove_code_signature_64, symObjAddr: 0x1F4, symBinAddr: 0x100002FA8, symSize: 0x230 }
+  - { offsetInCU: 0x506, offset: 0x2798C, size: 0x8, addend: 0x0, symName: _Usage, symObjAddr: 0x424, symBinAddr: 0x1000031D8, symSize: 0x48 }
+  - { offsetInCU: 0x52F, offset: 0x279B5, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x46C, symBinAddr: 0x100003220, symSize: 0x7B0 }
 ...
