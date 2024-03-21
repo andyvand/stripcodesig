@@ -445,19 +445,19 @@ int main(int argc, char **argv)
 
             if (mh->magic == MH_CIGAM)
             {
-                printf ("Removing code signature from swapped 32 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from swapped 32 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_32(archbuffer, true);
             } else if (mh->magic == MH_CIGAM_64) {
-                printf ("Removing code signature from swapped 64 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from swapped 64 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_64(archbuffer, true);
             } else if (mh->magic == MH_MAGIC) {
-                printf ("Removing code signature from 32 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from 32 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_32(archbuffer, false);
             } else if (mh->magic == MH_MAGIC_64) {
-                printf ("Removing code signature from 64 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from 64 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_64(archbuffer, false);
             } else {
-                printf("Skipping file with wrong magic (%u)\n", mh->magic);
+                printf("Skipping file with wrong magic (0x%X)\n", mh->magic);
             }
 
             ++current_bin;
@@ -480,19 +480,19 @@ int main(int argc, char **argv)
             
             if (mh->magic == MH_CIGAM)
             {
-                printf ("Removing code signature from swapped 32 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from swapped 32 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_32(archbuffer, true);
             } else if (mh->magic == MH_CIGAM_64) {
-                printf ("Removing code signature from swapped 64 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from swapped 64 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_64(archbuffer, true);
             } else if (mh->magic == MH_MAGIC) {
-                printf ("Removing code signature from 32 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from 32 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_32(archbuffer, false);
             } else if (mh->magic == MH_MAGIC_64) {
-                printf ("Removing code signature from 64 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from 64 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_64(archbuffer, false);
             } else {
-                printf("Skipping file with wrong magic (%u)\n", mh->magic);
+                printf("Skipping file with wrong magic (0x%X)\n", mh->magic);
             }
             
             ++current_bin;
@@ -515,19 +515,19 @@ int main(int argc, char **argv)
             
             if (mh->magic == MH_CIGAM)
             {
-                printf ("Removing code signature from swapped 32 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from swapped 32 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_32(archbuffer, true);
             } else if (mh->magic == MH_CIGAM_64) {
-                printf ("Removing code signature from swapped 64 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from swapped 64 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_64(archbuffer, true);
             } else if (mh->magic == MH_MAGIC) {
-                printf ("Removing code signature from 32 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from 32 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_32(archbuffer, false);
             } else if (mh->magic == MH_MAGIC_64) {
-                printf ("Removing code signature from 64 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from 64 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_64(archbuffer, false);
             } else {
-                printf("Skipping file with wrong magic (%u)\n", mh->magic);
+                printf("Skipping file with wrong magic (0x%X)\n", mh->magic);
             }
             
             ++current_bin;
@@ -550,19 +550,19 @@ int main(int argc, char **argv)
             
             if (mh->magic == MH_CIGAM)
             {
-                printf ("Removing code signature from swapped 32 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from swapped 32 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_32(archbuffer, true);
             } else if (mh->magic == MH_CIGAM_64) {
-                printf ("Removing code signature from swapped 64 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from swapped 64 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_64(archbuffer, true);
             } else if (mh->magic == MH_MAGIC) {
-                printf ("Removing code signature from 32 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from 32 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_32(archbuffer, false);
             } else if (mh->magic == MH_MAGIC_64) {
-                printf ("Removing code signature from 64 bit binary (%u)\n", mh->magic);
+                printf ("Removing code signature from 64 bit binary (0x%X)\n", mh->magic);
                 remove_code_signature_64(archbuffer, false);
             } else {
-                printf("Skipping file with wrong magic (%u)\n", mh->magic);
+                printf("Skipping file with wrong magic (0x%X)\n", mh->magic);
             }
             
             ++current_bin;
